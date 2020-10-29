@@ -1,0 +1,42 @@
+---
+- name: 1) Install MariaDB server package
+  become: yes
+  apt: name=mariadb-server state=present
+
+- name: 2) Start Mysql Service
+  become: yes
+  service: name=mysql state=started enabled=true
+
+- name: 3) Install python Mysql package
+  become: yes
+  apt: name=python-mysqldb state=present
+
+- name: 4) Create a new database
+  become: yes
+  mysql_db: name=IdrissDB state=present collation=utf8_general_ci
+
+- name: 5) Create a database user
+  become: yes
+  mysql_user: name=IdrissDB password=IdrissDB priv=*.*:ALL host=10.0.0.201 state=present
+
+- name: 6) Pass my.cnf file
+  become: yes
+  copy: src=my.cnf dest=/etc/mysql/my.cnf
+
+#- name: ) Copy sample data
+#  become: yes
+#  copy: src=dump.sql dest=/tmp/dump.sql
+  
+#- name: ) Insert sample data
+#  become: yes
+#  shell: cat /tmp/dump.sql | mysql -u IdrissDB -p IdrissDB IdrissDB
+
+- name: 7) Restart MySQL database
+  become: yes
+  service: name=mysql state=restarted
+
+# Should pass this to Wordpress server
+
+# name: 8) pass the script with database
+#  become: yes
+#  copy: src=db.php dest=/var/www/html/db.php mode=0664

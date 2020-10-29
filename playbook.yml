@@ -1,0 +1,16 @@
+---
+
+#wordpress-server
+
+- hosts: wordpress
+  connection: local
+  roles:
+    - apache
+
+
+#database-server  
+
+- hosts: database
+  connection: local
+  roles:
+    - mariadb
